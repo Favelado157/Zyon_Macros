@@ -1,0 +1,43 @@
+name: Instalador Windows
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  installer:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Compilar e empacotar
+        shell: pwsh
+        run: |
+          $version = '2.0.0'
+          if ($env:GITHUB_REF_TYPE -eq 'tag') {
+            if ($env:GITHUB_REF_NAME -notmatch '^v\d+\.\d+\.\d+$') { throw 'Use uma tag vMAIOR.MENOR.CORREÇÃO.' }
+            $version = $env:GITHUB_REF_NAME.Substring(1)
+          }
+          dotnet publish -c Release -r win-x64 --self-contained true -p:Version=$version -o publish
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          choco install nsis --no-progress -y
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          $nsis = Join-Path ${env:ProgramFiles(x86)} 'NSIS\makensis.exe'
+          & $nsis "/DAPP_VERSION=$version" installer.nsi
+          exit $LASTEXITCODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GhosttzzKBot-Setup-x64
+          path: GhosttzzKBot-Setup-x64.exe
+          if-no-files-found: error
+      - name: Publicar versão
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "${{ github.ref_name }}" GhosttzzKBot-Setup-x64.exe --verify-tag --generate-notes

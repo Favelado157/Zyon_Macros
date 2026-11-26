@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Version>2.0.0</Version>
+    <ApplicationIcon>assets/app.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup><Content Include="assets/*" CopyToOutputDirectory="PreserveNewest" /></ItemGroup>
+</Project>
