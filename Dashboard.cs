@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
-namespace GhosttzzKBot;
+namespace ZyonMacros;
 
 sealed class Dashboard : Form
 {
@@ -49,7 +49,7 @@ sealed class Dashboard : Form
     {
         settings = Settings.Load();
         macro = new(settings) { IsPanelPoint = p => WindowState != FormWindowState.Minimized && Bounds.Contains(p) };
-        Text = "GhosttzzKBot";
+        Text = "ZyonMacros";
         StartPosition = FormStartPosition.CenterScreen;
         ClientSize = new Size(1260, 790);
         MinimumSize = new Size(760, 520);
@@ -255,7 +255,7 @@ sealed class Dashboard : Form
     }
     void Logo(Control parent,int x,int y,int w,int h,float size)
     {
-        var logo=LabelAt(parent,"GhosttzzKBot",x,y,w,h,size,true);
+        var logo=LabelAt(parent,"ZyonMacros",x,y,w,h,size,true);
         logo.Font=new Font("Segoe UI",size,FontStyle.Bold|FontStyle.Italic);
         logo.ForeColor=Color.FromArgb(208,243,255);
     }
@@ -458,7 +458,7 @@ sealed class Dashboard : Form
         if (macro.Active) macro.Finish();
         RefreshState();
         if (macro.Saved.Events.Count==0) { Notice("Grave algum movimento antes de salvar."); return; }
-        using var picker=new SaveFileDialog { Filter="Gravação GhosttzzKBot (*.ghost.json)|*.ghost.json", DefaultExt="ghost.json", FileName="Gravação.ghost.json" };
+        using var picker=new SaveFileDialog { Filter="Gravação ZyonMacros (*.ghost.json)|*.ghost.json", DefaultExt="ghost.json", FileName="Gravação.ghost.json" };
         if(picker.ShowDialog(this)!=DialogResult.OK) return;
         var temporary=picker.FileName+"."+Guid.NewGuid().ToString("N")+".tmp";
         try
@@ -473,7 +473,7 @@ sealed class Dashboard : Form
     void LoadRecording()
     {
         if (macro.Active || playback is not null) { Notice("Finalize a gravação ou reprodução para carregar um arquivo."); return; }
-        using var picker=new OpenFileDialog { Filter="Gravação GhosttzzKBot (*.ghost.json)|*.ghost.json" };
+        using var picker=new OpenFileDialog { Filter="Gravação ZyonMacros (*.ghost.json)|*.ghost.json" };
         if(picker.ShowDialog(this)!=DialogResult.OK) return;
         using var stream=File.OpenRead(picker.FileName);
         if(stream.Length>40*1024*1024) throw new InvalidDataException("A gravação excede o tamanho suportado.");
@@ -509,14 +509,14 @@ sealed class Dashboard : Form
     }
     void Navigate(string tab)
     {
-        if(tab=="Sobre") { Notice($"GhosttzzKBot v{Current}\nGravador e reprodutor de movimentos, cliques, rolagem e teclas.\n\nConfigurações: {Settings.Folder}"); return; }
+        if(tab=="Sobre") { Notice($"ZyonMacros v{Current}\nGravador e reprodutor de movimentos, cliques, rolagem e teclas.\n\nConfigurações: {Settings.Folder}"); return; }
         surface.AutoScrollPosition=Point.Empty;
         surface.ScrollControlIntoView(sections[tab]);
         sections[tab].Focus();
         if(tab=="Atualização") _=CheckUpdates(false);
     }
     void SaveSettings() => Try(settings.Save);
-    void Notice(string text) => MessageBox.Show(this,text,"GhosttzzKBot");
+    void Notice(string text) => MessageBox.Show(this,text,"ZyonMacros");
     void Try(Action action)
     {
         try { action(); }
@@ -600,7 +600,7 @@ sealed class Dashboard : Form
             string repo=settings.UpdateRepository ?? "";
             if(!Regex.IsMatch(repo,@"\A[A-Za-z0-9-]+/[A-Za-z0-9_.-]+\z")) throw new InvalidOperationException("Repositório de atualizações inválido.");
             using var client=new HttpClient { Timeout=TimeSpan.FromSeconds(8) };
-            client.DefaultRequestHeaders.UserAgent.ParseAdd("GhosttzzKBot/"+Current);
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("ZyonMacros/"+Current);
             using var response=await client.GetAsync($"https://api.github.com/repos/{repo}/releases/latest");
             if(response.StatusCode==System.Net.HttpStatusCode.NotFound)
             {
@@ -617,7 +617,7 @@ sealed class Dashboard : Form
             foreach(var asset in release.RootElement.GetProperty("assets").EnumerateArray())
             {
                 string? url=asset.GetProperty("browser_download_url").GetString();
-                if (asset.GetProperty("name").GetString()=="GhosttzzKBot-Setup-x64.exe" &&
+                if (asset.GetProperty("name").GetString()=="ZyonMacros-Setup-x64.exe" &&
                     Uri.TryCreate(url,UriKind.Absolute,out var uri) && uri.Scheme=="https" && uri.Host=="github.com" &&
                     uri.AbsolutePath.StartsWith($"/{repo}/releases/download/",StringComparison.OrdinalIgnoreCase))
                 {
@@ -628,7 +628,7 @@ sealed class Dashboard : Form
             updateStatus=installerUrl is null ? $"v{newer} disponível, aguardando instalador." : $"Nova versão   v{newer} disponível!";
             ShowUpdate();
             if(!closing && prompt && installerUrl is not null && MessageBox.Show(this,$"A versão v{newer} está disponível. Baixar agora?",
-                "Atualização do GhosttzzKBot",MessageBoxButtons.YesNo,MessageBoxIcon.Information)==DialogResult.Yes)
+                "Atualização do ZyonMacros",MessageBoxButtons.YesNo,MessageBoxIcon.Information)==DialogResult.Yes)
                 Open(installerUrl);
         }
         catch(Exception) { updateStatus="Falha ao consultar o GitHub. Tente novamente."; }
