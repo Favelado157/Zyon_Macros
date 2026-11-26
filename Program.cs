@@ -1,11 +1,11 @@
-namespace GhosttzzKBot;
+namespace ZyonMacros;
 static class Program
 {
     [STAThread]
     static void Main()
     {
         using var instance = new Mutex(true, "GhosttzzKBot-Desktop", out bool first);
-        if (!first) { MessageBox.Show("O GhosttzzKBot já está aberto."); return; }
+        if (!first) { MessageBox.Show("O ZyonMacros já está aberto."); return; }
         ApplicationConfiguration.Initialize();
         Application.Run(new Dashboard());
     }

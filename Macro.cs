@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace GhosttzzKBot;
+namespace ZyonMacros;
 
 record MacroEvent(long Time, int Message, int X, int Y, int Data);
 record Recording(long Duration, List<MacroEvent> Events);

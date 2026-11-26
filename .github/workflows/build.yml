@@ -19,7 +19,7 @@ jobs:
       - name: Compilar e empacotar
         shell: pwsh
         run: |
-          $version = '2.0.0'
+          $version = (Select-Xml -Path GhosttzzKBot.csproj -XPath '/Project/PropertyGroup/Version').Node.InnerText
           if ($env:GITHUB_REF_TYPE -eq 'tag') {
             if ($env:GITHUB_REF_NAME -notmatch '^v\d+\.\d+\.\d+$') { throw 'Use uma tag vMAIOR.MENOR.CORREÇÃO.' }
             $version = $env:GITHUB_REF_NAME.Substring(1)
@@ -33,11 +33,15 @@ jobs:
           exit $LASTEXITCODE
       - uses: actions/upload-artifact@v4
         with:
-          name: GhosttzzKBot-Setup-x64
-          path: GhosttzzKBot-Setup-x64.exe
+          name: ZyonMacros-Setup-x64
+          path: ZyonMacros-Setup-x64.exe
           if-no-files-found: error
       - name: Publicar versão
         if: startsWith(github.ref, 'refs/tags/v')
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "${{ github.ref_name }}" GhosttzzKBot-Setup-x64.exe --verify-tag --generate-notes
+        run: |
+          $tag = $env:GITHUB_REF_NAME
+          # A versão 2.0.0 procura o instalador pelo nome original.
+          Copy-Item ZyonMacros-Setup-x64.exe GhosttzzKBot-Setup-x64.exe
+          gh release create $tag ZyonMacros-Setup-x64.exe "GhosttzzKBot-Setup-x64.exe#Instalador para atualização da v2.0.0" --verify-tag --title "ZyonMacros $tag" --generate-notes

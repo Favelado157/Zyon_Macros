@@ -1,4 +1,4 @@
-# GhosttzzKBot
+# ZyonMacros
 
 Painel nativo para Windows 11 x64 para gravar e reproduzir movimentos, cliques, rolagem e teclas. O instalador inclui o runtime e cria atalhos no menu Iniciar e na Área de Trabalho.
 
@@ -24,4 +24,4 @@ dotnet publish -c Release -r win-x64 --self-contained true -o publish
 & "${env:ProgramFiles(x86)}\NSIS\makensis.exe" installer.nsi
 ```
 
-O fluxo **Instalador Windows** compila um instalador no GitHub Actions. Uma tag como `v2.0.0` publica também o instalador no GitHub Releases. Para distribuir uma atualização da versão inicial, publique uma versão superior, como `v2.0.1`. O painel instalado verifica o lançamento estável mais recente ao abrir e pergunta se o usuário quer baixar o novo instalador. Durante a atualização, feche o painel quando solicitado e execute o instalador baixado. Se hospedar o projeto em outro repositório, ajuste `UpdateRepository` em `Settings.cs` para novas instalações e em `settings.json` para instalações existentes.
+O fluxo **Instalador Windows** compila um instalador no GitHub Actions. Uma tag de versão publica o instalador no GitHub Releases. Para distribuir uma atualização da versão atual, publique uma tag superior, como `v2.0.2`. O lançamento inclui o instalador `ZyonMacros-Setup-x64.exe` e uma cópia com o nome que a versão 2.0.0 procura. O painel instalado verifica o lançamento estável mais recente ao abrir e pergunta se o usuário quer baixar o novo instalador. Durante a atualização, feche o painel quando solicitado e execute o instalador baixado. Se hospedar o projeto em outro repositório, ajuste `UpdateRepository` em `Settings.cs` para novas instalações e em `settings.json` para instalações existentes.

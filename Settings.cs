@@ -1,5 +1,5 @@
 using System.Text.Json;
-namespace GhosttzzKBot;
+namespace ZyonMacros;
 sealed class Settings
 {
     public static readonly string Root = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GhosttzzKBot");
